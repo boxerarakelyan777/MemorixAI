@@ -29,7 +29,7 @@ const Hero: React.FC = () => {
   return (
     <>
       <section className="bg-white dark:bg-gray-900">
-        <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
+        <div className="grid max-w-screen-xl px-4 py-24 mx-auto lg:gap-8 xl:gap-0 lg:py-32 lg:grid-cols-12">
           <div className="mr-auto place-self-center lg:col-span-7">
             <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
               Revolutionize Your Study Routine with AI-Powered Flashcards
@@ -51,11 +51,16 @@ const Hero: React.FC = () => {
             </a>
           </div>
           <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
-            <video
+            {/* <video
               src="/video/F.mp4"  // Ensure this matches exactly
               autoPlay
               loop
               muted
+              className="w-full h-auto object-cover"
+            /> */}
+            <img
+              src="/video/sample.jpg"  // Make sure this image exists in your public folder
+              alt="AI-Powered Flashcards"
               className="w-full h-auto object-cover"
             />
           </div>
@@ -66,15 +71,15 @@ const Hero: React.FC = () => {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Join the Waitlist</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-md w-full">
+            <h2 className="text-2xl font-semibold mb-6 text-center text-gray-900 dark:text-white">Join the Waitlist</h2>
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
                 placeholder="Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 mb-4 border rounded-lg"
+                className="w-full px-4 py-2 mb-4 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 required
               />
               <input
@@ -82,20 +87,20 @@ const Hero: React.FC = () => {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 mb-4 border rounded-lg"
+                className="w-full px-4 py-2 mb-6 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 required
               />
-              <div className="flex justify-end">
+              <div className="flex justify-center space-x-4">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 mr-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-100"
+                  className="px-6 py-2 text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                  className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-300"
                 >
                   Submit
                 </button>

@@ -15,8 +15,8 @@ const Team: React.FC = () => {
         <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
           <a href="#">
             <img
-              className="w-full rounded-lg sm:rounded-none sm:rounded-l-lg"
-              src="/teamMembers/Rudik.jpg"
+              className="w-[472px] max-h-[591px] rounded-lg sm:rounded-none sm:rounded-l-lg object-cover"
+              src="/teamMembers/Rudik.JPG"
               alt="Rudik Avatar"
             />
           </a>
@@ -84,7 +84,7 @@ const Team: React.FC = () => {
         <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
   <a href="#">
     <img
-      className="w-[472px] max-h-[591px] rounded-lg sm:rounded-none sm:rounded-l-lg object-cover"
+      className="w-[496px] max-h-[591px] rounded-lg sm:rounded-none sm:rounded-l-lg object-cover"
       src="/teamMembers/David.jpg"
       alt="Diepreye Avatar"
     />
@@ -138,7 +138,7 @@ const Team: React.FC = () => {
         <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
           <a href="#">
             <img
-              className="w-full rounded-lg sm:rounded-none sm:rounded-l-lg"
+              className="w-[496px] max-h-[591px] rounded-lg sm:rounded-none sm:rounded-l-lg"
               src="/teamMembers/Vedant.jpg"
               alt="Vedant Avatar"
             />
@@ -208,9 +208,9 @@ const Team: React.FC = () => {
         <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
           <a href="#">
             <img
-              className="w-full rounded-lg sm:rounded-none sm:rounded-l-lg"
-              src="/teamMembers/Rudik.jpg"
-              alt="Rudik Avatar"
+              className="w-[468px] max-h-[591px] rounded-lg sm:rounded-none sm:rounded-l-lg object-cover"
+              src="/teamMembers/default.jpg"
+              alt="Rohit Avatar"
             />
           </a>
           <div className="p-5">
