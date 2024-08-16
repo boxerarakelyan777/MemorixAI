@@ -7,6 +7,8 @@ import Providers from "../../components/Providers";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 
+import { GoogleTagManager } from '@next/third-parties/google';
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -25,7 +27,13 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
+
+        <head>
+          
+        </head>
+        <GoogleTagManager gtmId="GTM-NL5QDMCL" />
         <body className={inter.className}>
+          
           <Providers>
             <Navbar />
             <main>{children}</main>
