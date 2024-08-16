@@ -30,7 +30,7 @@ const Team: React.FC = () => {
             </p>
             <ul className="flex space-x-4 sm:mt-0">
                 <li>
-                    <a href="https://www.linkedin.com/in/rudik-arakelyan/" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <a href="https://www.linkedin.com/in/rudik-arakelyan/"  target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg
                         className="w-5 h-5"
                         fill="currentColor"
@@ -46,7 +46,7 @@ const Team: React.FC = () => {
                     </a>
                 </li>
                 <li>
-                    <a href="https://github.com/boxerarakelyan777" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <a href="https://github.com/boxerarakelyan777" target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg
                         className="w-5 h-5"
                         fill="currentColor"
@@ -62,7 +62,7 @@ const Team: React.FC = () => {
                     </a>
                 </li>
                 <li>
-                    <a href="https://x.com/boxerarakelyan" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <a href="https://x.com/boxerarakelyan" target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg
                         className="w-5 h-5"
                         fill="currentColor"
@@ -99,7 +99,7 @@ const Team: React.FC = () => {
             </p>
             <ul className="flex space-x-4 sm:mt-0">
                 <li>
-                    <a href="https://www.linkedin.com/in/diepreyecd/" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <a href="https://www.linkedin.com/in/diepreyecd/" target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg
                         className="w-5 h-5"
                         fill="currentColor"
@@ -115,7 +115,7 @@ const Team: React.FC = () => {
                     </a>
                 </li>
                 <li>
-                    <a href="https://github.com/davephoenix360" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <a href="https://github.com/davephoenix360" target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg
                         className="w-5 h-5"
                         fill="currentColor"
@@ -154,7 +154,7 @@ const Team: React.FC = () => {
             </p>
             <ul className="flex space-x-4 sm:mt-0">
                 <li>
-                    <a href="https://www.linkedin.com/in/vedant-patare-65a332280/" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <a href="https://www.linkedin.com/in/vedant-patare-65a332280/" target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg
                         className="w-5 h-5"
                         fill="currentColor"
@@ -170,7 +170,7 @@ const Team: React.FC = () => {
                     </a>
                 </li>
                 <li>
-                    <a href="https://github.com/vedant1729" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <a href="https://github.com/vedant1729" target="_blank"className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg
                         className="w-5 h-5"
                         fill="currentColor"
@@ -186,7 +186,7 @@ const Team: React.FC = () => {
                     </a>
                 </li>
                 <li>
-                    <a href="https://x.com/vedantp1729" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <a href="https://x.com/vedantp1729" target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg
                         className="w-5 h-5"
                         fill="currentColor"
@@ -206,10 +206,10 @@ const Team: React.FC = () => {
           </div>
         </div>
         <div className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700">
-          <a href="#">
+          <a href="#" >
             <img
-              className="w-[468px] max-h-[591px] rounded-lg sm:rounded-none sm:rounded-l-lg object-cover"
-              src="/teamMembers/default.jpg"
+              className="w-[482px] max-h-[591px] rounded-lg sm:rounded-none sm:rounded-l-lg object-cover"
+              src="/teamMembers/Rohit.jpg"
               alt="Rohit Avatar"
             />
           </a>
@@ -224,7 +224,7 @@ const Team: React.FC = () => {
             </p>
             <ul className="flex space-x-4 sm:mt-0">
                 <li>
-                    <a href="https://www.linkedin.com/in/rohit-menon-376216228/" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <a href="https://www.linkedin.com/in/rohit-menon-376216228/" target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg
                         className="w-5 h-5"
                         fill="currentColor"
@@ -240,7 +240,7 @@ const Team: React.FC = () => {
                     </a>
                 </li>
                 <li>
-                    <a href="https://github.com/rohitrm13" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <a href="https://github.com/rohitrm13" target="_blank" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg
                         className="w-5 h-5"
                         fill="currentColor"
