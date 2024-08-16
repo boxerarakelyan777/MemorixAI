@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "../../app/globals.css";
+import Providers from "../../components/Providers";
 
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -20,11 +21,13 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
+          <Providers>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </Providers>
         </body>
       </html>
     </ClerkProvider>

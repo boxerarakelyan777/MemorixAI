@@ -99,7 +99,7 @@ const Team: React.FC = () => {
             </p>
             <ul className="flex space-x-4 sm:mt-0">
                 <li>
-                    <a href="https://www.linkedin.com" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <a href="https://www.linkedin.com/in/diepreyecd/" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                     <svg
                         className="w-5 h-5"
                         fill="currentColor"
@@ -209,7 +209,7 @@ const Team: React.FC = () => {
           <a href="#">
             <img
               className="w-full rounded-lg sm:rounded-none sm:rounded-l-lg"
-              src="/teamMembers/Rohit.jpg"
+              src="/teamMembers/Rudik.jpg"
               alt="Rudik Avatar"
             />
           </a>

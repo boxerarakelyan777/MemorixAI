@@ -52,13 +52,14 @@ const Hero: React.FC = () => {
           </div>
           <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
             <video
-              src="/path/to/your/video.mp4"
+              src="/video/F.mp4"  // Ensure this matches exactly
               autoPlay
               loop
               muted
               className="w-full h-auto object-cover"
             />
           </div>
+
         </div>
       </section>
 
