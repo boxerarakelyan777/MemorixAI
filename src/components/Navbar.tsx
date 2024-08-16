@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { SignInButton, SignedOut, SignedIn, UserButton } from '@clerk/nextjs';
 
-const Navbar: React.FC = () => {
+const NavBar: React.FC = () => {
   return (
     <header>
       <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
@@ -39,4 +39,4 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar;
+export default NavBar;
