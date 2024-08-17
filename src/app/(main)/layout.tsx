@@ -3,11 +3,10 @@ import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "../../app/globals.css";
 import Providers from "../../components/Providers";
-
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-
 import { GoogleTagManager } from '@next/third-parties/google';
+import { ClientProviders } from "../../components/ClientProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,17 +25,18 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <GoogleTagManager gtmId="GTM-NL5QDMCL" />
-        <body className={inter.className}>
-          
-          <Providers>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-          </Providers>
-        </body>
-      </html>
+      <ClientProviders>
+        <html lang="en" suppressHydrationWarning>
+          <GoogleTagManager gtmId="GTM-NL5QDMCL" />
+          <body className={inter.className}>
+            <Providers>
+              <Navbar />
+              <main>{children}</main>
+              <Footer />
+            </Providers>
+          </body>
+        </html>
+      </ClientProviders>
     </ClerkProvider>
   );
 }
