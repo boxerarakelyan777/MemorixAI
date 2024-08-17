@@ -6,7 +6,7 @@ import Providers from "../../components/Providers";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { GoogleTagManager } from '@next/third-parties/google';
-import { ClientProviders } from "../../components/ClientProviders";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <ClientProviders>
+      
         <html lang="en" suppressHydrationWarning>
           <GoogleTagManager gtmId="GTM-NL5QDMCL" />
           <body className={inter.className}>
@@ -36,7 +36,7 @@ export default function RootLayout({
             </Providers>
           </body>
         </html>
-      </ClientProviders>
+      
     </ClerkProvider>
   );
 }

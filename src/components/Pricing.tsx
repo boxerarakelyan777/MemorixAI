@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useSession } from 'next-auth/react';
+import React from 'react';
 
 // Stripe Plans
 const plans = [
@@ -25,11 +24,9 @@ const plans = [
 ];
 
 const Pricing: React.FC = () => {
-  const { data: session } = useSession();
-
   const getButtonLink = (plan: { price: number; link: string }) => {
     if (plan.price === 0) return '#';
-    return plan.link + '?prefilled_email=' + session?.user?.email;
+    return plan.link;
   };
 
   return (
@@ -104,7 +101,7 @@ const Pricing: React.FC = () => {
               </ul>
               <a
                 href={getButtonLink(plan)}
-                target={plan.price > 0 ? "_blank" : "_self"}
+                target="_blank"
                 className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:focus:ring-blue-900"
               >
                 {plan.price === 0 ? 'Coming Soon' : 'Subscribe'}
