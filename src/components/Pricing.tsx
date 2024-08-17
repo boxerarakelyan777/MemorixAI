@@ -12,14 +12,14 @@ const plans = [
   {
     name: 'Pro Plan',
     price: 1,
-    link: process.env.NODE_ENV === 'development' ? 'https://buy.stripe.com/test_fZeeWTd1Kd4h46YeUU' : '', // Replace with your Stripe link
-    priceId: process.env.NODE_ENV === 'development' ? 'price_1PoeXzBGuZJEG2quSrgzetsk' : '', // Replace with your Stripe priceId
+    link: 'https://buy.stripe.com/test_fZeeWTd1Kd4h46YeUU',
+    priceId: 'price_1PoeXzBGuZJEG2quSrgzetsk',
   },
   {
     name: 'Enterprise',
     price: 5,
-    link: process.env.NODE_ENV === 'development' ? 'https://buy.stripe.com/test_6oE01Z8Lu7JXavmcMN' : '', // Replace with your Stripe link
-    priceId: process.env.NODE_ENV === 'development' ? 'price_1PoebEBGuZJEG2qu67A2rEW5' : '', // Replace with your Stripe priceId
+    link: 'https://buy.stripe.com/test_6oE01Z8Lu7JXavmcMN',
+    priceId: 'price_1PoebEBGuZJEG2qu67A2rEW5',
   },
 ];
 
