@@ -10,6 +10,11 @@ import {
   Card,
   CardActionArea,
   CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Grid,
   Modal,
   Stack,
@@ -102,6 +107,7 @@ const Dashboard: React.FC = () => {
     }
 
     try {
+      console.log(user);
       const userDocRef = doc(collection(db, "users"), user?.id);
       const userDocSnap = await getDoc(userDocRef);
 
@@ -164,47 +170,29 @@ const Dashboard: React.FC = () => {
         >
           Save Flashcards
         </Button>
-        <Modal
-          open={saveModalOpen}
-          onClose={() => setSaveModalOpen(false)}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Card
-            sx={{
-              maxWidth: 400,
-              p: 4,
-              borderRadius: 4,
-              border: "1px solid #ccc",
-              alignContent: "center",
-            }}
-          >
-            <CardContent>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Enter a name for your flashcard set:
-              </Typography>
-              <TextField
-                sx={{ mt: 2, width: "100%" }}
-                value={saveText}
-                onChange={(e) => setSaveText(e.target.value)}
-              />
-              <Button
-                variant="contained"
-                sx={{ mt: 2 }}
-                onClick={() => {
-                  setSaveModalOpen(false);
-                }}
-              >
-                Save
-              </Button>
-            </CardContent>
-          </Card>
-        </Modal>
+        <Dialog open={saveModalOpen} onClose={handleClose}>
+          <DialogTitle>Save Flashcard Set</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Please enter a name for your flashcard set.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Set Name"
+              type="text"
+              fullWidth
+              value={saveText}
+              onChange={(e) => setSaveText(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={saveFlashcards} color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Grid container spacing={2}>
           {flashcards &&
             flashcards.map((flashcard, index) => (
