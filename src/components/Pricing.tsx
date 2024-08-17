@@ -40,7 +40,7 @@ const Pricing: React.FC = () => {
             Choose the Best Plan for Your Learning Journey
           </h2>
           <p className="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">
-            Explore our flexible pricing plans to suit your study needs. Whether you're a solo learner or a team, we've got you covered.
+            Explore our flexible pricing plans to suit your study needs. Whether you&apos;re a solo learner or a team, we&apos;ve got you covered.
           </p>
         </div>
         <div className="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
