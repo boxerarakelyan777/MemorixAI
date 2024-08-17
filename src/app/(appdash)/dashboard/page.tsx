@@ -25,6 +25,7 @@ import {
   getDocs,
   writeBatch,
 } from "firebase/firestore";
+import { useUser } from "@clerk/nextjs";
 
 interface Flashcard {
   front: string;
@@ -32,6 +33,7 @@ interface Flashcard {
 }
 
 const Dashboard: React.FC = () => {
+  const { isLoaded, isSignedIn, user } = useUser();
   const [text, setText] = useState("");
   const [flashcards, setFlashcards] = useState([] as Flashcard[]);
   const [saveText, setSaveText] = useState("");
@@ -44,7 +46,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleGenerateFlashcards = async () => {
-    if (text != "") {
+    if (text !== "") {
       const response = await fetch("/api/generate?type=prompt", {
         method: "POST",
         body: text,
@@ -56,18 +58,24 @@ const Dashboard: React.FC = () => {
         .then((data) => {
           setFlashcards(data);
         });
-    } else if (fileName != "") {
+    } else if (fileName !== "") {
       const getExtension = (str: String) => str.slice(str.lastIndexOf(".") + 1);
       const response = await fetch(
         `/api/generate?type=${getExtension(fileName)}`,
         { method: "POST", body: fileName }
-      ).then((res) => res.json())
-      .catch((error) => {
-        console.log(error);
-      })
-      .then((data) => {
-        setFlashcards(data);
-      });
+      )
+        .then((res) => res.json())
+        .catch((error) => {
+          console.log(error);
+        })
+        .then((data) => {
+          setFlashcards(data);
+        });
+    } else {
+      alert(
+        "Please enter some text or upload document to generate flashcards."
+      );
+      return;
     }
   };
 
@@ -85,6 +93,43 @@ const Dashboard: React.FC = () => {
 
   const handleClose = () => {
     setSaveModalOpen(false);
+  };
+
+  const saveFlashcards = async () => {
+    if (!saveText.trim()) {
+      alert("Please enter a name for your flashcard set.");
+      return;
+    }
+
+    try {
+      const userDocRef = doc(collection(db, "users"), user?.id);
+      const userDocSnap = await getDoc(userDocRef);
+
+      const batch = writeBatch(db);
+
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        const updatedSets = [
+          ...(userData.flashcardSets || []),
+          { name: saveText },
+        ];
+        batch.update(userDocRef, { flashcardSets: updatedSets });
+      } else {
+        batch.set(userDocRef, { flashcardSets: [{ name: saveText }] });
+      }
+
+      const setDocRef = doc(collection(userDocRef, "flashcardSets"), saveText);
+      batch.set(setDocRef, { flashcards });
+
+      await batch.commit();
+
+      alert("Flashcards saved successfully!");
+      handleClose();
+      setSaveText("");
+    } catch (error) {
+      console.error("Error saving flashcards:", error);
+      alert("An error occurred while saving flashcards. Please try again.");
+    }
   };
 
   return (
@@ -162,62 +207,17 @@ const Dashboard: React.FC = () => {
         </Modal>
         <Grid container spacing={2}>
           {flashcards &&
-            flashcards.map((flashcard: Flashcard, index) => (
+            flashcards.map((flashcard, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
                 <Card>
-                  <CardActionArea
-                    onClick={() => {
-                      console.log(flashcard);
-                    }}
-                  >
-                    <CardContent>
-                      <Box
-                        sx={{
-                          perspective: "1000px",
-                          "& > div": {
-                            transformStyle: "preserve-3d",
-                            transition: "transform 0.8s",
-                            cursor: "pointer",
-                            position: "relative",
-                            width: "100px",
-                            height: "200px",
-                            boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2)",
-                            transform: flipped[index]
-                              ? "rotateY(180deg)"
-                              : "rotateY(0deg)",
-                          },
-                          "& > div > div": {
-                            cursor: "pointer",
-                            position: "absolute",
-                            width: "100%",
-                            height: "100%",
-                            backfaceVisibility: "hidden",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            padding: 2,
-                            boxSizing: "border-box",
-                          },
-                          "& > div > div:nth-of-type(2)": {
-                            transform: "rotateY(180deg)",
-                          },
-                        }}
-                      >
-                        <div>
-                          <div>
-                            <Typography variant="h6" component={"div"}>
-                              {flashcard.front}
-                            </Typography>
-                          </div>
-                          <div>
-                            <Typography variant="h6" component={"div"}>
-                              {flashcard.back}
-                            </Typography>
-                          </div>
-                        </div>
-                      </Box>
-                    </CardContent>
-                  </CardActionArea>
+                  <CardContent>
+                    <Typography variant="h6">Front:</Typography>
+                    <Typography>{flashcard.front}</Typography>
+                    <Typography variant="h6" sx={{ mt: 2 }}>
+                      Back:
+                    </Typography>
+                    <Typography>{flashcard.back}</Typography>
+                  </CardContent>
                 </Card>
               </Grid>
             ))}

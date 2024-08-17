@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { UnstructuredLoader } from "@langchain/community/document_loaders/fs/unstructured";
+import { DocxLoader } from "@langchain/community/document_loaders/fs/docx";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -50,7 +51,7 @@ interface Flashcards {
 
 /**
  * Handles the POST request for generating flashcards.
- * 
+ *
  * @param request - The request object.
  * @returns A JSON response containing the generated flashcards.
  */
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
   const searchParams = new URLSearchParams(url.searchParams);
   console.log(searchParams.get("type"));
 
-  if (searchParams.get("type") === "post") {
+  if (searchParams.get("type") === "prompt") {
     try {
       // get the prompt from the request
       const prompt = await request.text();
@@ -97,6 +98,8 @@ export async function POST(request: Request) {
     let loader;
     if (documentExtension === "pdf") {
       loader = new PDFLoader(`./public/uploads/${fileName}`);
+    } else if (documentExtension === "docx") {
+      loader = new DocxLoader(`./public/uploads/${fileName}`);
     } else {
       loader = new UnstructuredLoader(`./public/uploads/${fileName}`);
     }

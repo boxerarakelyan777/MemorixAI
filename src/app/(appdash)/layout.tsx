@@ -1,4 +1,5 @@
 // components/layout.tsx
+import { ClerkProvider } from "@clerk/nextjs";
 import React from "react";
 
 interface LayoutProps {
@@ -7,6 +8,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
+    <ClerkProvider>
     <html lang="en">
       <head>
         <title>Dashboard</title>
@@ -56,6 +58,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </div>
       </body>
     </html>
+    </ClerkProvider>
   );
 };
 
