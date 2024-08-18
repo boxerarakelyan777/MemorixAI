@@ -135,11 +135,12 @@ const DocToFlashcard: React.FC = () => {
             )}
           </Button>
           <Button
-            variant="outlined"
-            color="primary"
+            variant="contained"
+            color="secondary"
             fullWidth
             onClick={() => setSaveModalOpen(true)}
             sx={{ maxWidth: 300 }}
+            disabled={flashcards.length === 0}
           >
             Save Flashcards
           </Button>

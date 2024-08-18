@@ -5,6 +5,7 @@ import Link from 'next/link';
 // components
 
 import { IconMenu } from '@tabler/icons-react';
+import Profile from './Profile';
 
 interface ItemType {
   toggleMobileSidebar:  (event: React.MouseEvent<HTMLElement>) => void;
@@ -50,7 +51,7 @@ const Header = ({toggleMobileSidebar}: ItemType) => {
 
         <Box flexGrow={1} />
         <Stack spacing={1} direction="row" alignItems="center">
-      
+          <Profile />
         </Stack>
       </ToolbarStyled>
     </AppBarStyled>

@@ -49,7 +49,9 @@ const Menuitems = [
     id: uniqueId(),
     title: "Games (Coming Soon)",
     icon: IconDeviceGamepad,
-    href: "/games",
+    href: "#",
+    onClick: (e: React.MouseEvent<HTMLAnchorElement>) => e.preventDefault(),
+    disabled: true,
   },
 
 ];

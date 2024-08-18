@@ -2,11 +2,11 @@
 "use client";
 
 import { ClerkProvider } from "@clerk/nextjs";
-import { baselightTheme } from "../../utils/theme/DefaultColors";
+import { lightTheme, darkTheme } from "../../utils/theme/DefaultColors";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { styled, Container, Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./layout/header/Header";
 import Sidebar from "./layout/sidebar/Sidebar";
 
@@ -31,58 +31,52 @@ const PageWrapper = styled('div')(() => ({
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const savedMode = localStorage.getItem('darkMode');
+    setIsDarkMode(savedMode === 'true');
+  }, []);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    localStorage.setItem('darkMode', (!isDarkMode).toString());
+  };
 
   return (
     <ClerkProvider>
-    <html lang="en">
-      <head>
-        <title>PantryPalAI</title>
-        <meta name="description" content="Track and manage your pantry items" />
-        <link rel="icon" href="/FaviconIcon2.png" />
-      </head>
-      
-      <body>
-        <ThemeProvider theme={baselightTheme}>
-        <CssBaseline />
-        <MainWrapper className="mainwrapper">
-          {/* ------------------------------------------- */}
-          {/* Sidebar */}
-          {/* ------------------------------------------- */}
-          <Sidebar
-            isSidebarOpen={isSidebarOpen}
-            isMobileSidebarOpen={isMobileSidebarOpen}
-            onSidebarClose={() => setMobileSidebarOpen(false)}
-          />
-          {/* ------------------------------------------- */}
-          {/* Main Wrapper */}
-          {/* ------------------------------------------- */}
-          <PageWrapper className="page-wrapper">
-            {/* ------------------------------------------- */}
-            {/* Header */}
-            {/* ------------------------------------------- */}
-            <Header toggleMobileSidebar={() => setMobileSidebarOpen(true)} />
-            {/* ------------------------------------------- */}
-            {/* PageContent */}
-            {/* ------------------------------------------- */}
-            <Container
-              sx={{
-                paddingTop: "20px",
-                maxWidth: "1200px",
-              }}
-            >
-              {/* ------------------------------------------- */}
-              {/* Page Route */}
-              {/* ------------------------------------------- */}
-              <Box sx={{ minHeight: "calc(100vh - 170px)" }}>{children}</Box>
-              {/* ------------------------------------------- */}
-              {/* End Page */}
-              {/* ------------------------------------------- */}
-            </Container>
-          </PageWrapper>
-        </MainWrapper>
-        </ThemeProvider>
-      </body>
-    </html>
+      <html lang="en">
+        <head>
+          <title>MemorixAI Dashboard</title>
+          <meta name="description" content="MemorixAI Dashboard" />
+          <link rel="icon" href="/favicon.ico" />
+        </head>
+        <body>
+          <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+            <CssBaseline />
+            <MainWrapper className="mainwrapper">
+              <Sidebar
+                isSidebarOpen={isSidebarOpen}
+                isMobileSidebarOpen={isMobileSidebarOpen}
+                onSidebarClose={() => setMobileSidebarOpen(false)}
+                isDarkMode={isDarkMode}
+                toggleDarkMode={toggleDarkMode}
+              />
+              <PageWrapper className="page-wrapper">
+                <Header toggleMobileSidebar={() => setMobileSidebarOpen(true)} />
+                <Container
+                  sx={{
+                    paddingTop: "20px",
+                    maxWidth: "1200px",
+                  }}
+                >
+                  <Box sx={{ minHeight: "calc(100vh - 170px)" }}>{children}</Box>
+                </Container>
+              </PageWrapper>
+            </MainWrapper>
+          </ThemeProvider>
+        </body>
+      </html>
     </ClerkProvider>
   );
 };

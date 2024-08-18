@@ -1,24 +1,60 @@
 import React from "react";
-import { useMediaQuery, Box, Drawer, useTheme } from "@mui/material";
+import { useMediaQuery, Box, Drawer, useTheme, IconButton } from "@mui/material";
 import Logo from "../shared/logo/Logo";
 import SidebarItems from "./SidebarItems";
 import { Upgrade } from "./Updrade";
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 interface ItemType {
   isMobileSidebarOpen: boolean;
   onSidebarClose: (event: React.MouseEvent<HTMLElement>) => void;
   isSidebarOpen: boolean;
+  isDarkMode: boolean;
+  toggleDarkMode: () => void;
 }
 
 const Sidebar = ({
   isMobileSidebarOpen,
   onSidebarClose,
   isSidebarOpen,
+  isDarkMode,
+  toggleDarkMode,
 }: ItemType) => {
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
 
   const sidebarWidth = "270px";
+
+  const sidebarContent = (
+    <Box
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Logo */}
+      <Box px={3}>
+        <Logo />
+      </Box>
+      
+      {/* Sidebar Items */}
+      <Box sx={{ flexGrow: 1 }}>
+        <SidebarItems />
+      </Box>
+      
+      {/* Upgrade Component */}
+      <Upgrade />
+      
+      {/* Dark Mode Toggle */}
+      <Box sx={{ p: 2 }}>
+        <IconButton onClick={toggleDarkMode} color="inherit">
+          {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+        </IconButton>
+      </Box>
+    </Box>
+  );
 
   if (lgUp) {
     return (
@@ -28,9 +64,6 @@ const Sidebar = ({
           flexShrink: 0,
         }}
       >
-        {/* ------------------------------------------- */}
-        {/* Sidebar for desktop */}
-        {/* ------------------------------------------- */}
         <Drawer
           anchor="left"
           open={isSidebarOpen}
@@ -42,28 +75,7 @@ const Sidebar = ({
             },
           }}
         >
-          {/* ------------------------------------------- */}
-          {/* Sidebar Box */}
-          {/* ------------------------------------------- */}
-          <Box
-            sx={{
-              height: "100%",
-            }}
-          >
-            {/* ------------------------------------------- */}
-            {/* Logo */}
-            {/* ------------------------------------------- */}
-            <Box px={3}>
-              <Logo />
-            </Box>
-            <Box>
-              {/* ------------------------------------------- */}
-              {/* Sidebar Items */}
-              {/* ------------------------------------------- */}
-              <SidebarItems />
-              <Upgrade />
-            </Box>
-          </Box>
+          {sidebarContent}
         </Drawer>
       </Box>
     );
@@ -82,17 +94,7 @@ const Sidebar = ({
         },
       }}
     >
-      {/* ------------------------------------------- */}
-      {/* Logo */}
-      {/* ------------------------------------------- */}
-      <Box px={2}>
-        <Logo />
-      </Box>
-      {/* ------------------------------------------- */}
-      {/* Sidebar For Mobile */}
-      {/* ------------------------------------------- */}
-      <SidebarItems />
-      <Upgrade />
+      {sidebarContent}
     </Drawer>
   );
 };
