@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "MemorixAI",
-  description: "Memorixaai is a cutting-edge flashcard SaaS application designed to enhance your learning experience with AI-powered insights. Powered by Llama 3.1, MemorixAI intelligently generates personalized flashcards, adapting to your learning pace and style. Whether you're preparing for exams, mastering a new language, or simply trying to retain more information, MemorixAI offers a tailored approach to help you succeed.",
+  description: "MemorixAI is a cutting-edge flashcard SaaS application designed to enhance your learning experience with AI-powered insights. Powered by Llama 3.1, MemorixAI intelligently generates personalized flashcards, adapting to your learning pace and style. Whether you're preparing for exams, mastering a new language, or simply trying to retain more information, MemorixAI offers a tailored approach to help you succeed.",
   icons: {
     icon: '/favicon.ico',
   },

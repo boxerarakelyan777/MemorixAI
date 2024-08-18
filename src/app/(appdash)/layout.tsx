@@ -9,6 +9,7 @@ import { styled, Container, Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Header from "./layout/header/Header";
 import Sidebar from "./layout/sidebar/Sidebar";
+import { GoogleTagManager } from '@next/third-parties/google';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -48,9 +49,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <html lang="en">
         <head>
           <title>MemorixAI Dashboard</title>
-          <meta name="description" content="MemorixAI Dashboard" />
+          <meta name="description" content="MemorixAI is a cutting-edge flashcard SaaS application designed to enhance your learning experience with AI-powered insights. Powered by Llama 3.1, MemorixAI intelligently generates personalized flashcards, adapting to your learning pace and style. Whether you're preparing for exams, mastering a new language, or simply trying to retain more information, MemorixAI offers a tailored approach to help you succeed." />
           <link rel="icon" href="/favicon.ico" />
         </head>
+        <GoogleTagManager gtmId="GTM-NL5QDMCL" />
         <body>
           <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
             <CssBaseline />
@@ -61,6 +63,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 onSidebarClose={() => setMobileSidebarOpen(false)}
                 isDarkMode={isDarkMode}
                 toggleDarkMode={toggleDarkMode}
+                toggleMobileSidebar={() => setMobileSidebarOpen(true)}
               />
               <PageWrapper className="page-wrapper">
                 <Header toggleMobileSidebar={() => setMobileSidebarOpen(true)} />

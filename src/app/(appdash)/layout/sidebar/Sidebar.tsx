@@ -12,6 +12,7 @@ interface ItemType {
   isSidebarOpen: boolean;
   isDarkMode: boolean;
   toggleDarkMode: () => void;
+  toggleMobileSidebar: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 const Sidebar = ({
@@ -20,6 +21,7 @@ const Sidebar = ({
   isSidebarOpen,
   isDarkMode,
   toggleDarkMode,
+  toggleMobileSidebar,
 }: ItemType) => {
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
@@ -41,7 +43,7 @@ const Sidebar = ({
       
       {/* Sidebar Items */}
       <Box sx={{ flexGrow: 1 }}>
-        <SidebarItems />
+        <SidebarItems toggleMobileSidebar={toggleMobileSidebar} />
       </Box>
       
       {/* Upgrade Component */}

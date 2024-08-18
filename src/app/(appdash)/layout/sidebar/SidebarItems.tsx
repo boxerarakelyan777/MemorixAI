@@ -4,25 +4,22 @@ import { usePathname } from "next/navigation";
 import { Box, List } from "@mui/material";
 import NavItem from "./NavItem";
 import NavGroup from "./NavGroup/NavGroup";
+import { NavItem as NavItemType } from './types'; // Assuming you have a types file
 
-const SidebarItems = ({ toggleMobileSidebar }: any) => {
+const SidebarItems = ({ toggleMobileSidebar }: { toggleMobileSidebar: (e: React.MouseEvent<HTMLElement>) => void }) => {
   const pathname = usePathname();
   const pathDirect = pathname ?? ''; // Provide a default empty string if pathname is null
-  
+
   return (
     <Box sx={{ px: 3 }}>
       <List sx={{ pt: 0 }} className="sidebarNav" component="div">
         {Menuitems.map((item) => {
-          // {/********SubHeader**********/}
           if (item.subheader) {
             return <NavGroup item={item} key={item.subheader} />;
-
-            // {/********If Sub Menu**********/}
-            /* eslint no-else-return: "off" */
           } else {
             return (
               <NavItem
-                item={item}
+                item={item as NavItemType}
                 key={item.id}
                 pathDirect={pathDirect}
                 onClick={toggleMobileSidebar}
@@ -34,4 +31,5 @@ const SidebarItems = ({ toggleMobileSidebar }: any) => {
     </Box>
   );
 };
+
 export default SidebarItems;
