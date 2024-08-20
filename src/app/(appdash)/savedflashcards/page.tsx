@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Typography, Grid, Container, Paper, Box, IconButton, Button } from '@mui/material';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { Typography, Grid, Container, Paper, Box, IconButton, Button, CircularProgress, Snackbar } from '@mui/material';
+import { collection, getDocs, query, orderBy, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';    
 import { motion, AnimatePresence } from 'framer-motion';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -10,7 +10,6 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 interface Flashcard {
-  id: string;
   front: string;
   back: string;
 }
@@ -19,6 +18,7 @@ interface FlashcardSet {
   id: string;
   name: string;
   flashcards: Flashcard[];
+  prompt: string;
 }
 
 const SavedFlashcards: React.FC = () => {
@@ -26,6 +26,10 @@ const SavedFlashcards: React.FC = () => {
   const [selectedSet, setSelectedSet] = useState<FlashcardSet | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [newFlashcards, setNewFlashcards] = useState<Flashcard[]>([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   useEffect(() => {
     fetchSavedFlashcards();
@@ -42,6 +46,7 @@ const SavedFlashcards: React.FC = () => {
       setFlashcardSets(sets);
     } catch (error) {
       console.error('Error fetching saved flashcards:', error);
+      showSnackbar('Error fetching saved flashcards');
     }
   };
 
@@ -49,11 +54,13 @@ const SavedFlashcards: React.FC = () => {
     setSelectedSet(set);
     setCurrentIndex(0);
     setFlipped(false);
+    setNewFlashcards([]);
   };
 
   const handleBackToSets = () => {
     setSelectedSet(null);
     setFlipped(false);
+    setNewFlashcards([]);
   };
 
   const nextCard = () => {
@@ -70,15 +77,125 @@ const SavedFlashcards: React.FC = () => {
     setFlipped(!flipped);
   };
 
+  const handleGenerateMore = async () => {
+    if (selectedSet) {
+      setIsLoading(true);
+      try {
+        const response = await fetch('/api/generate?type=prompt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: selectedSet.prompt }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to generate more flashcards');
+        }
+        const moreFlashcards = await response.json();
+        setNewFlashcards(moreFlashcards);
+      } catch (error) {
+        console.error('Error generating more flashcards:', error);
+        showSnackbar('Error generating more flashcards');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleRegenerate = async () => {
+    if (selectedSet) {
+      setIsLoading(true);
+      try {
+        const response = await fetch('/api/generate?type=prompt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: selectedSet.prompt }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to regenerate flashcards');
+        }
+        const regeneratedFlashcards = await response.json();
+        setNewFlashcards(regeneratedFlashcards);
+      } catch (error) {
+        console.error('Error regenerating flashcards:', error);
+        showSnackbar('Error regenerating flashcards');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleSaveNewFlashcards = async () => {
+    if (selectedSet && newFlashcards.length > 0) {
+      try {
+        const updatedFlashcards = [...selectedSet.flashcards, ...newFlashcards];
+        await updateDoc(doc(db, 'flashcardSets', selectedSet.id), {
+          flashcards: updatedFlashcards,
+        });
+        setSelectedSet({ ...selectedSet, flashcards: updatedFlashcards });
+        setNewFlashcards([]);
+        showSnackbar('New flashcards saved successfully');
+      } catch (error) {
+        console.error('Error saving new flashcards:', error);
+        showSnackbar('Error saving new flashcards');
+      }
+    }
+  };
+
+  const handleCancelNewFlashcards = () => {
+    setNewFlashcards([]);
+  };
+
+  const showSnackbar = (message: string) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
+
   if (selectedSet) {
     return (
-      <Container maxWidth="sm">
-        <Box sx={{ mb: 2 }}>
+      <Container maxWidth="lg">
+        <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Button startIcon={<ArrowBackIcon />} onClick={handleBackToSets}>
             Back to Sets
           </Button>
+          <Box>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleGenerateMore}
+              disabled={isLoading}
+              sx={{ mr: 1 }}
+            >
+              Generate More
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleRegenerate}
+              disabled={isLoading}
+            >
+              Regenerate
+            </Button>
+          </Box>
         </Box>
         <Typography variant="h4" gutterBottom>{selectedSet.name}</Typography>
+        {newFlashcards.length > 0 && (
+          <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleSaveNewFlashcards}
+              sx={{ mr: 1 }}
+            >
+              Save New Flashcards
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={handleCancelNewFlashcards}
+            >
+              Cancel
+            </Button>
+          </Box>
+        )}
         <Box sx={{ position: 'relative', height: 300, perspective: 1000 }}>
           <AnimatePresence mode="wait">
             <motion.div
@@ -148,7 +265,7 @@ const SavedFlashcards: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" gutterBottom>Saved Flashcard</Typography>
+      <Typography variant="h4" gutterBottom>Saved Flashcard Sets</Typography>
       <Grid container spacing={2}>
         {flashcardSets.map((set) => (
           <Grid item xs={12} sm={6} md={4} key={set.id}>
@@ -170,6 +287,12 @@ const SavedFlashcards: React.FC = () => {
       {flashcardSets.length === 0 && (
         <Typography variant="body1">No saved flashcard sets found.</Typography>
       )}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
     </Container>
   );
 };
