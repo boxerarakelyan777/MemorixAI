@@ -3,15 +3,15 @@ import { uploadFile } from "@/app/(appdash)/dashboard/upload-action";
 import { SetStateAction } from "react";
 
 interface UploadFormProps {
-  fileNameHandler: (newFileName: String) => void;
+  fileNameHandler: (fileName: string, downloadURL: string) => void;
 }
 
 export default function UploadForm(props: UploadFormProps) {
   return (
     <form
       action={async (formData) => {
-        const fileName = await uploadFile(formData);
-        props.fileNameHandler(fileName as string);
+        const result = await uploadFile(formData);
+        props.fileNameHandler(result.fileName, result.downloadURL);
       }}
       className="flex flex-col gap-4"
     >

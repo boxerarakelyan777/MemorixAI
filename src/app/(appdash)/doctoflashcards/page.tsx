@@ -28,7 +28,6 @@ interface Flashcard {
 }
 
 const DocToFlashcard: React.FC = () => {
-  const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [downloadURL, setDownloadURL] = useState<string | null>(null);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
@@ -37,34 +36,37 @@ const DocToFlashcard: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [saveModalOpen, setSaveModalOpen] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0];
-      setFile(selectedFile);
-      setFileName(selectedFile.name);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setFile(event.target.files[0]);
+      setFileName(event.target.files[0].name);
     }
   };
 
   const handleUpload = async () => {
     if (file) {
       setIsLoading(true);
-      setError(null);
-      const formData = new FormData();
-      formData.append("file", file);
       try {
+        const formData = new FormData();
+        formData.append('file', file);
         const result = await uploadFile(formData);
-        setFileName(result.fileName);
-        setDownloadURL(result.downloadURL);
-        console.log("File uploaded:", result.fileName);
-        console.log("Download URL:", result.downloadURL);
+        handleFileUpload(result.fileName, result.downloadURL);
       } catch (error) {
-        console.error("Error uploading file:", error);
-        setError("Failed to upload file. Please try again.");
+        console.error('Error uploading file:', error);
+        setError('Failed to upload file. Please try again.');
       } finally {
         setIsLoading(false);
       }
     }
+  };
+
+  const handleFileUpload = (newFileName: string, newDownloadURL: string) => {
+    setFileName(newFileName);
+    setDownloadURL(newDownloadURL);
+    console.log("File uploaded:", newFileName);
+    console.log("Download URL:", newDownloadURL);
   };
 
   const handleGenerateFlashcards = async () => {
