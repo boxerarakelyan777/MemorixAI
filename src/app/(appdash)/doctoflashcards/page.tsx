@@ -28,50 +28,79 @@ interface Flashcard {
 }
 
 const DocToFlashcard: React.FC = () => {
+  const [file, setFile] = useState<File | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [downloadURL, setDownloadURL] = useState<string | null>(null);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
-  const [saveModalOpen, setSaveModalOpen] = useState(false);
-  const [fileName, setFileName] = useState("");
-  const [flippedCards, setFlippedCards] = useState<boolean[]>([]);
-  const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [saveModalOpen, setSaveModalOpen] = useState(false);
 
-  const handleFileName = (newFileName: string) => {
-    setFileName(newFileName);
-  };
-
-  const handleGenerateFlashcards = async () => {
-    if (fileName !== "") {
-      setIsLoading(true);
-      const getExtension = (str: string) => str.slice(str.lastIndexOf(".") + 1);
-      const response = await fetch(
-        `/api/generate?type=${getExtension(fileName)}`,
-        { method: "POST", body: fileName }
-      )
-        .then((res) => res.json())
-        .catch((error) => {
-          console.log(error);
-        })
-        .then((data) => {
-          setFlashcards(data);
-          setCurrentIndex(0);
-          setFlipped(false);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else {
-      alert("Please upload a document to generate flashcards.");
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+      setFileName(selectedFile.name);
     }
   };
 
-  const handleFlip = (index: number) => {
-    setFlippedCards((prevFlippedCards) => {
-      const newFlippedCards = [...prevFlippedCards];
-      newFlippedCards[index] = !prevFlippedCards[index];
-      return newFlippedCards;
-    });
+  const handleUpload = async () => {
+    if (file) {
+      setIsLoading(true);
+      setError(null);
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const result = await uploadFile(formData);
+        setFileName(result.fileName);
+        setDownloadURL(result.downloadURL);
+        console.log("File uploaded:", result.fileName);
+        console.log("Download URL:", result.downloadURL);
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        setError("Failed to upload file. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleGenerateFlashcards = async () => {
+    if (fileName && downloadURL) {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch('/api/generate?type=document', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ fileName, downloadURL }),
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Received data:', data);
+        
+        if (Array.isArray(data)) {
+          setFlashcards(data);
+        } else {
+          throw new Error('Invalid response format');
+        }
+      } catch (error) {
+        console.error('Error generating flashcards:', error);
+        setError('Failed to generate flashcards. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      setError("Please upload a document first.");
+    }
   };
 
   const nextCard = () => {
@@ -96,29 +125,35 @@ const DocToFlashcard: React.FC = () => {
         </Typography>
         <Stack spacing={4} justifyContent="center" alignItems="center">
           <Box sx={{ width: '100%', textAlign: 'center' }}>
-            <form action={uploadFile as unknown as string}>
-              <input
-                type="file"
-                name="file"
-                id="file-upload"
-                hidden
-                onChange={(e) => handleFileName(e.target.files?.[0]?.name || "")}
-              />
-              <label htmlFor="file-upload">
-                <Button
-                  variant="outlined"
-                  component="span"
-                  startIcon={<CloudUploadIcon />}
-                  sx={{ mb: 2 }}
-                >
-                  Choose File
-                </Button>
-              </label>
-              <Typography variant="body2">{fileName || "No file chosen"}</Typography>
-              <Button type="submit" variant="contained" sx={{ mt: 2 }}>
-                Upload
+            <input
+              type="file"
+              id="file-upload"
+              hidden
+              onChange={handleFileChange}
+            />
+            <label htmlFor="file-upload">
+              <Button
+                variant="outlined"
+                component="span"
+                startIcon={<CloudUploadIcon />}
+                sx={{ mb: 2 }}
+              >
+                Choose File
               </Button>
-            </form>
+            </label>
+            <Typography variant="body2">{fileName || "No file chosen"}</Typography>
+            <Button 
+              onClick={handleUpload} 
+              variant="contained" 
+              sx={{ mt: 2 }}
+              disabled={!file || isLoading}
+            >
+              {isLoading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Upload"
+              )}
+            </Button>
           </Box>
           <Button
             variant="contained"
@@ -126,7 +161,7 @@ const DocToFlashcard: React.FC = () => {
             fullWidth
             onClick={handleGenerateFlashcards}
             sx={{ maxWidth: 300 }}
-            disabled={isLoading}
+            disabled={!downloadURL || isLoading}
           >
             {isLoading ? (
               <CircularProgress size={24} color="inherit" />
@@ -218,6 +253,11 @@ const DocToFlashcard: React.FC = () => {
             </IconButton>
           </Box>
         </Box>
+      )}
+      {error && (
+        <Typography color="error" variant="body1" sx={{ mt: 2 }}>
+          {error}
+        </Typography>
       )}
     </Container>
   );

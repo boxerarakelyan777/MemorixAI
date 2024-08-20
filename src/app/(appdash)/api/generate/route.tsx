@@ -6,6 +6,10 @@ import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { UnstructuredLoader } from "@langchain/community/document_loaders/fs/unstructured";
 import { DocxLoader } from "@langchain/community/document_loaders/fs/docx";
+import { storage } from "../../../../firebaseConfig";
+import { ref, getDownloadURL } from "firebase/storage";
+import axios from 'axios';
+import fs from 'fs/promises';
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -56,96 +60,86 @@ interface Flashcards {
  * @returns A JSON response containing the generated flashcards.
  */
 export async function POST(request: Request) {
-  //Print the search params
-  const url = new URL(request.url);
-  const searchParams = new URLSearchParams(url.searchParams);
-  console.log(searchParams.get("type"));
+  try {
+    const url = new URL(request.url);
+    const searchParams = new URLSearchParams(url.searchParams);
+    const type = searchParams.get("type");
+    console.log("Request type:", type);
 
-  if (searchParams.get("type") === "prompt") {
-    try {
-      // get the prompt from the request
+    if (type === "prompt") {
       const prompt = await request.text();
-      // Generate flashcards using the prompt and Groq chat completions
       const chatCompletion = await groq.chat.completions.create({
         messages: [
-          {
-            role: "system",
-            content: systemprompt,
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
+          { role: "system", content: systemprompt },
+          { role: "user", content: prompt },
         ],
         model: "llama3-8b-8192",
         response_format: { type: "json_object" },
       });
 
-      const flashcards = JSON.parse(
-        chatCompletion.choices[0].message.content || ""
-      );
-      console.log(flashcards);
-
-      return NextResponse.json(flashcards.flashcards);
-    } catch (error) {
-      console.error(error);
-    }
-  } else {
-    // Create the loader for the particular doument uploaded, then split the document to chunks
-    const finalFlashCards: Flashcard[] = [];
-    const documentExtension: String = searchParams.get("type") || "";
-    const fileName = await request.text();
-    let loader;
-    if (documentExtension === "pdf") {
-      loader = new PDFLoader(`./public/uploads/${fileName}`);
-    } else if (documentExtension === "docx") {
-      loader = new DocxLoader(`./public/uploads/${fileName}`);
+      const flashcards = JSON.parse(chatCompletion.choices[0].message.content || "{}");
+      console.log("Generated flashcards:", flashcards);
+      return NextResponse.json(flashcards.flashcards || []);
     } else {
-      loader = new UnstructuredLoader(`./public/uploads/${fileName}`);
-    }
+      const { fileName, downloadURL } = await request.json();
+      console.log("Received fileName:", fileName);
+      console.log("Received downloadURL:", downloadURL);
 
-    const docs = await loader.load();
-    const splittter = new RecursiveCharacterTextSplitter({
-      chunkSize: 2000,
-      chunkOverlap: 200,
-    });
-    const pageContentArray: string[] = [];
-    for (const doc of docs) {
-      const pageContent = doc.pageContent;
-      pageContentArray.push(pageContent);
-    }
+      if (!fileName || !downloadURL) {
+        throw new Error("No file name or download URL provided");
+      }
 
-    const splitDocs = await splittter.createDocuments(pageContentArray);
+      // Fetch the file content from Firebase Storage
+      const response = await axios.get(downloadURL, { responseType: 'arraybuffer' });
+      const arrayBuffer = response.data;
 
-    // Generate the flashcards using each doucment chunk from the document uploaded
-    for (const doc of splitDocs) {
-      try {
+      // Convert ArrayBuffer to Blob
+      const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+
+      // Use the appropriate loader based on file type
+      let docs;
+      if (fileName.endsWith('.pdf')) {
+        const loader = new PDFLoader(blob);
+        docs = await loader.load();
+      } else if (fileName.endsWith('.docx')) {
+        // For DOCX files, we might need to use a different approach
+        // This depends on the capabilities of your DocxLoader
+        throw new Error("DOCX files are not supported yet");
+      } else {
+        throw new Error("Unsupported file type");
+      }
+
+      console.log("Loaded document chunks:", docs.length);
+
+      const splitter = new RecursiveCharacterTextSplitter({
+        chunkSize: 2000,
+        chunkOverlap: 200,
+      });
+
+      const splitDocs = await splitter.splitDocuments(docs);
+      console.log("Split document chunks:", splitDocs.length);
+
+      const finalFlashCards: Flashcard[] = [];
+
+      for (const doc of splitDocs) {
         const chatCompletion = await groq.chat.completions.create({
           messages: [
-            {
-              role: "system",
-              content: systemprompt,
-            },
-            {
-              role: "user",
-              content: doc.pageContent,
-            },
+            { role: "system", content: systemprompt },
+            { role: "user", content: doc.pageContent },
           ],
           model: "llama3-8b-8192",
           response_format: { type: "json_object" },
         });
 
-        const flashcards = JSON.parse(
-          chatCompletion.choices[0].message.content || ""
-        ) as Flashcards;
-
-        for (const flashcard of flashcards.flashcards) {
-          finalFlashCards.push(flashcard);
-        }
-      } catch (err) {
-        console.log("Error: ", err);
+        const flashcards = JSON.parse(chatCompletion.choices[0].message.content || "{}") as Flashcards;
+        finalFlashCards.push(...(flashcards.flashcards || []));
       }
+
+      console.log("Generated flashcards:", finalFlashCards.length);
+      return NextResponse.json(finalFlashCards);
     }
-    return NextResponse.json(finalFlashCards, { status: 200 });
+  } catch (error) {
+    console.error("Error in POST function:", error);
+    return NextResponse.json({ error: "An error occurred while processing the request" }, { status: 500 });
   }
 }

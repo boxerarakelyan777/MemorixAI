@@ -1,22 +1,28 @@
 "use server";
-import fs from "node:fs/promises";
-import { revalidatePath } from "next/cache";
+import { storage } from "../../../firebaseConfig";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
 export async function uploadFile(formData: FormData) {
   const file = formData.get("file") as File;
+  const fileExtension = file.name.split('.').pop();
+  const fileName = `${uuidv4()}.${fileExtension}`;
+  const storageRef = ref(storage, `uploads/${fileName}`);
+
   const arrayBuffer = await file.arrayBuffer();
-  const buffer = new Uint8Array(arrayBuffer);
+  const fileBuffer = new Uint8Array(arrayBuffer);
 
-  //Check if file exists
-  const fileExists = await fs
-    .access(`./public/uploads/${file.name}`)
-    .then(() => true)
-    .catch(() => false);
+  try {
+    // Upload to Firebase Storage
+    await uploadBytes(storageRef, fileBuffer);
+    const downloadURL = await getDownloadURL(storageRef);
 
-  //Create the new file
-  await fs.writeFile(`./public/uploads/${file.name}`, buffer);
+    console.log("File uploaded successfully:", fileName);
+    console.log("Download URL:", downloadURL);
 
-  revalidatePath("/");
-
-  return file.name;
+    return { fileName, downloadURL };
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    throw error;
+  }
 }
