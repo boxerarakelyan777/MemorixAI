@@ -8,18 +8,35 @@ const plans = [
     name: 'Free Plan',
     price: 0,
     link: '#',
+    features: [
+      '5 flashcard generations per month',
+      '2 saved flashcard sets',
+      'No access to flashcard games',
+    ],
   },
   {
     name: 'Pro Plan',
     price: 1,
     link: 'https://buy.stripe.com/test_fZeeWTd1Kd4h46YeUU',
     priceId: 'price_1PoeXzBGuZJEG2quSrgzetsk',
+    features: [
+      'Unlimited text to flashcard generation',
+      '500 doc to flashcard generations per month',
+      'Unlimited saved flashcard sets',
+      'Limited access to flashcard games',
+    ],
   },
   {
     name: 'Enterprise',
     price: 5,
     link: 'https://buy.stripe.com/test_6oE01Z8Lu7JXavmcMN',
     priceId: 'price_1PoebEBGuZJEG2qu67A2rEW5',
+    features: [
+      'Unlimited text to flashcard generation',
+      'Unlimited doc to flashcard generation',
+      'Unlimited saved flashcard sets',
+      'Unlimited access to flashcard games',
+    ],
   },
 ];
 
@@ -52,60 +69,24 @@ const Pricing: React.FC = () => {
                 <span className="text-gray-500 dark:text-gray-400">/month</span>
               </div>
               <ul role="list" className="mb-8 space-y-4 text-left">
-                {plan.name === 'Free Plan' ? (
-                  <>
-                    <li className="flex items-center space-x-3">
-                      <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 011.414 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
-                      <span>2 AI-generated flashcards per month</span>
-                    </li>
-                    <li className="flex items-center space-x-3">
-                      <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 011.414 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
-                      <span>Access to educational games</span>
-                    </li>
-                    <li className="flex items-center space-x-3">
-                      <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 011.414 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
-                      <span>Basic support</span>
-                    </li>
-                  </>
-                ) : plan.name === 'Pro Plan' ? (
-                  <>
-                    <li className="flex items-center space-x-3">
-                      <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 011.414 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
-                      <span>Unlimited AI-generated flashcards</span>
-                    </li>
-                    <li className="flex items-center space-x-3">
-                      <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 011.414 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
-                      <span>Access to some educational games</span>
-                    </li>
-                    <li className="flex items-center space-x-3">
-                      <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 011.414 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
-                      <span>Priority support</span>
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    <li className="flex items-center space-x-3">
-                      <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 011.414 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
-                      <span>Unlimited AI-generated flashcards</span>
-                    </li>
-                    <li className="flex items-center space-x-3">
-                      <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 011.414 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
-                      <span>Access to all educational games</span>
-                    </li>
-                    <li className="flex items-center space-x-3">
-                      <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 011.414 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
-                      <span>Dedicated support team</span>
-                    </li>
-                  </>
-                )}
+                {plan.features.map((feature, index) => (
+                  <li key={index} className="flex items-center space-x-3">
+                    <svg className="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 011.414 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                    </svg>
+                    <span>{feature}</span>
+                  </li>
+                ))}
               </ul>
-              <a
-                href={getButtonLink(plan)}
-                target="_blank"
-                className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:focus:ring-blue-900"
-              >
-                {plan.price === 0 ? 'Coming Soon' : 'Subscribe'}
-              </a>
+              <div className="mt-auto">
+                <a
+                  href={getButtonLink(plan)}
+                  target="_blank"
+                  className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white dark:focus:ring-blue-900"
+                >
+                  {plan.price === 0 ? 'Coming Soon' : 'Subscribe'}
+                </a>
+              </div>
             </div>
           ))}
         </div>
