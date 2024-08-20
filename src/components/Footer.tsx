@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
                   <a href="https://github.com/boxerarakelyan777/MemorixAI" className="hover:underline">GitHub</a>
                 </li>
                 <li>
-                  <a href="https://twitter.com/yourprofile " className="hover:underline">TikTok</a>
+                  <a href="https://www.tiktok.com/@memorixai " className="hover:underline">TikTok</a>
                 </li>
               </ul>
             </div>
