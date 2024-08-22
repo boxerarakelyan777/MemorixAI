@@ -31,7 +31,14 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
+
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 # MemorixAI
+
+
+![1724301607810-434f1cb6-8d4b-499d-8048-be29d7e3d838_1](https://github.com/user-attachments/assets/86e7be3c-9033-45d8-9c5d-b86911d3c8d8)
+![1724301607810-434f1cb6-8d4b-499d-8048-be29d7e3d838_3](https://github.com/user-attachments/assets/7348964a-51c0-4135-a40c-8fd054af40e3)
+![1724301607810-434f1cb6-8d4b-499d-8048-be29d7e3d838_2](https://github.com/user-attachments/assets/218613d1-b810-47e7-9b4f-3b9d4df63558)
+
