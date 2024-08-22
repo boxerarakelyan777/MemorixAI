@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { Typography, Grid, Container, Paper, Box, IconButton, Button, CircularProgress, Snackbar } from '@mui/material';
-import { collection, getDocs, query, orderBy, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';    
 import { motion, AnimatePresence } from 'framer-motion';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Flashcard {
   front: string;
@@ -149,6 +150,19 @@ const SavedFlashcards: React.FC = () => {
     setSnackbarOpen(true);
   };
 
+  const handleDeleteSet = async (setId: string) => {
+    if (window.confirm('Are you sure you want to delete this flashcard set?')) {
+      try {
+        await deleteDoc(doc(db, 'flashcardSets', setId));
+        setFlashcardSets(flashcardSets.filter(set => set.id !== setId));
+        showSnackbar('Flashcard set deleted successfully');
+      } catch (error) {
+        console.error('Error deleting flashcard set:', error);
+        showSnackbar('Error deleting flashcard set');
+      }
+    }
+  };
+
   if (selectedSet) {
     return (
       <Container maxWidth="lg">
@@ -274,12 +288,27 @@ const SavedFlashcards: React.FC = () => {
               sx={{ 
                 p: 2, 
                 cursor: 'pointer', 
-                '&:hover': { backgroundColor: 'action.hover' } 
+                '&:hover': { backgroundColor: 'action.hover' },
+                position: 'relative',
               }}
-              onClick={() => handleSetClick(set)}
             >
-              <Typography variant="h6">{set.name}</Typography>
-              <Typography variant="body2">{set.flashcards.length} cards</Typography>
+              <Box onClick={() => handleSetClick(set)}>
+                <Typography variant="h6">{set.name}</Typography>
+                <Typography variant="body2">{set.flashcards.length} cards</Typography>
+              </Box>
+              <IconButton
+                sx={{
+                  position: 'absolute',
+                  top: 8,
+                  right: 8,
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteSet(set.id);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
             </Paper>
           </Grid>
         ))}
