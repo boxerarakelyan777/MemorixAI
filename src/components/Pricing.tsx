@@ -5,7 +5,7 @@ import React from 'react';
 // Stripe Plans
 const plans = [
   {
-    name: 'Free Plan',
+    name: 'Free',
     price: 0,
     link: '#',
     features: [
@@ -15,27 +15,27 @@ const plans = [
     ],
   },
   {
-    name: 'Pro Plan',
-    price: 1,
-    link: 'https://buy.stripe.com/test_fZeeWTd1Kd4h46YeUU',
-    priceId: 'price_1PoeXzBGuZJEG2quSrgzetsk',
+    name: 'Basic',
+    price: 9.99,
+    link: 'https://buy.stripe.com/test_8wM3eb0eY8O15b2aEG',
+    priceId: 'price_1PqSRUBGuZJEG2quYl0LPh29',
     features: [
-      'Unlimited text to flashcard generation',
-      '500 doc to flashcard generations per month',
+      'Unlimited text to flashcard generations',
+      '200 document to flashcard generations per month',
       'Unlimited saved flashcard sets',
-      'Limited access to flashcard games',
+      'Access to basic flashcard games',
     ],
   },
   {
-    name: 'Enterprise',
-    price: 5,
-    link: 'https://buy.stripe.com/test_6oE01Z8Lu7JXavmcMN',
-    priceId: 'price_1PoebEBGuZJEG2qu67A2rEW5',
+    name: 'Pro',
+    price: 19.99,
+    link: 'https://buy.stripe.com/test_eVabKH8LufcpcDu003',
+    priceId: 'price_1PqSY0BGuZJEG2quz5Ixehbc',
     features: [
-      'Unlimited text to flashcard generation',
-      'Unlimited doc to flashcard generation',
+      'Unlimited text to flashcard generations',
+      'Unlimited document to flashcard generations',
       'Unlimited saved flashcard sets',
-      'Unlimited access to flashcard games',
+      'Access to all flashcard games',
     ],
   },
 ];
@@ -48,7 +48,7 @@ const Pricing: React.FC = () => {
 
   return (
     <section id="pricing" className="bg-white dark:bg-gray-900">
-      <div className="px-4  py-24 mx-auto max-w-screen-xl lg:py-24 lg:px-6">
+      <div className="px-4 py-24 mx-auto max-w-screen-xl lg:py-24 lg:px-6">
         <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
           <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
             Choose the Best Plan for Your Learning Journey
@@ -59,10 +59,28 @@ const Pricing: React.FC = () => {
         </div>
         <div className="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
           {plans.map((plan, index) => (
-            <div key={index} className="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
-              <h3 className="mb-4 text-2xl font-semibold">{plan.name}</h3>
+            <div 
+              key={index} 
+              className={`flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white
+                ${plan.name === 'Basic' ? 'lg:scale-110 lg:z-10 relative shadow-lg dark:shadow-blue-500/50 shadow-blue-500/50 border-blue-500' : ''}`}
+            >
+              {plan.name === 'Basic' && (
+                <>
+                  <span className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-yellow-400 text-gray-900 text-xs font-semibold px-3 py-1 rounded-full">
+                    Most Popular
+                  </span>
+                  <div className="absolute inset-0 bg-blue-200 dark:bg-blue-900 opacity-20 rounded-lg blur-[20px] z-[-1]"></div>
+                </>
+              )}
+              <h3 className={`mb-4 text-2xl font-semibold ${plan.name === 'Basic' ? 'text-blue-600 dark:text-blue-400' : ''}`}>
+                {plan.name}
+              </h3>
               <p className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
-                {plan.name === 'Free Plan' ? 'Ideal for personal use to explore the features.' : plan.name === 'Pro Plan' ? 'Best for advanced users who need more features.' : 'Perfect for large organizations and teams.'}
+                {plan.name === 'Free' 
+                  ? 'Ideal for personal use to explore the features.' 
+                  : plan.name === 'Pro' 
+                    ? 'Best for advanced users who need more features.' 
+                    : 'Perfect for individual learners and small study groups.'}
               </p>
               <div className="flex justify-center items-baseline my-8">
                 <span className="mr-2 text-5xl font-extrabold">${plan.price}</span>
